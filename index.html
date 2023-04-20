@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<img alt="" class="imgWeather">
+<div class="container">
+    <div class="search-box">
+        <input type="text" placeholder="Enter your location"/>
+        <button></button>
+    </div>
+    <div class="error">
+        <p>Invalid city name</p>
+    </div>
+    <div class="weather">
+        <div>
+            <img src="img/rain.png" class="weather-icon">
+        </div>
+        <h1 class="temp">22 &#8451</h1>
+        <h2 class="city">Kyiv</h2>
+        <div class="date">Fri 13 Apr</div>
+        <div class="addition">
+            <div>
+                <img src="img/humidity.png" class="addition-image">
+                <div>
+                    <p class="humidity">50%</p>
+                    <p>Humidity</p>
+                </div>
+            </div>
+            <div>
+                <img src="img/wind-weather.png" class="addition-image">
+                <div>
+                    <p class="wind">15 km/h</p>
+                    <p>Wind Speed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
