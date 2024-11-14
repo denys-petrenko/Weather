@@ -4,10 +4,11 @@ let weatherImage = document.querySelector(".weather-icon");
 let weather = document.querySelector(".weather");
 let errorText = document.querySelector(".error");
 let dateOutput = document.querySelector(".date");
-let coverWeather = document.querySelector(".imgWeather");
+let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const apiKey = "2c8228a4e72d849615c04b5ce863daae";
 const apiUrl = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=`;
+const apiUrlForecast = `https://api.openweathermap.org/data/2.5/forecast?q=`;
 
 async function checkWeather(city) {
     const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
@@ -16,30 +17,31 @@ async function checkWeather(city) {
         weather.style.display = "none";
     } else {
         const data = await response.json();
+
         document.querySelector(".city").innerHTML = data.name;
         document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "&#8451";
+        document.querySelector(".description").innerHTML = data.weather[0].description;
         document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
         document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
         if (data.weather[0].main == "Clear") {
             weatherImage.src = "img/clear.png";
-            coverWeather.src = "img/clear.jpg";
+            document.body.src = "img/clear.jpg";
         } else if (data.weather[0].main == "Clouds") {
             weatherImage.src = "img/clouds.png";
-            coverWeather.src = "img/cloudy.jpg";
+            document.body.src = "img/cloudy.jpg";
         } else if (data.weather[0].main == "Rain") {
             weatherImage.src = "img/rain.png";
-            coverWeather.src = "img/rainy.jpg";
+            document.body.src = "img/rainy.jpg";
         } else if (data.weather[0].main == "Snow") {
             weatherImage.src = "img/snow.png";
-            coverWeather.src = "img/snow.jpg";
+            document.body.src = "img/snow.jpg";
         }
-        weather.style.display = "block";
+        weather.style.display = "flex";
         errorText.style.display = "none";
     }
 }
 
 window.addEventListener("load", function () {
-    let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     let today = new Date();
     let day = days[today.getDay()];
@@ -49,6 +51,7 @@ window.addEventListener("load", function () {
     dateOutput.innerHTML = formattedDate;
     let city = 'Kyiv';
     checkWeather(city);
+    forecast(city);
 });
 
 searchButton.addEventListener("click", () => {
@@ -62,3 +65,87 @@ searchInput.addEventListener("keydown", (event) => {
         searchInput.value = "";
     }
 });
+
+
+async function forecast(city) {
+    const response = await fetch(apiUrlForecast + city + `&appid=${apiKey}` + `&units=metric`);
+    const data = await response.json();
+
+    let dailyData = {};
+
+    data.list.forEach(item => {
+        let date = new Date(item.dt * 1000);
+        let day = days[date.getDay()];
+        let temp = item.main.temp;
+        let weatherMain = item.weather[0].main;
+
+        let today = days[new Date().getDay()];
+        if (day === today) return;
+
+        if (!dailyData[day]) {
+            dailyData[day] = {
+                temp: temp,
+                weatherCount: {},
+                weather: weatherMain
+            };
+        }
+
+        if (temp > dailyData[day].temp) {
+            dailyData[day].temp = temp;
+        }
+
+        dailyData[day][weatherMain] = (dailyData[day][weatherMain] || 0) + 1;
+
+        dailyData[day].weatherCount[weatherMain] = (dailyData[day].weatherCount[weatherMain] || 0) + 1;
+
+        if (dailyData[day].weatherCount[weatherMain] > (dailyData[day].weatherCount[dailyData[day].weather] || 0)) {
+            dailyData[day].mostCommonWeather = weatherMain;
+        }
+
+    });
+
+    for (let day in dailyData) {
+        const { temp, weather } = dailyData[day];
+        forecastDay(day, temp, weather);
+    }
+}
+
+
+function forecastDay(day, temp, sky) {
+    let forecastContainer = document.querySelector(".forecast");
+
+    let dayBox = document.createElement("div");
+    dayBox.classList.add("days");
+
+    let dayDiv = document.createElement("div");
+    dayDiv.classList.add("day-header");
+    let dayHeader = document.createElement("h1");
+    dayHeader.innerHTML = day;
+    dayDiv.append(dayHeader);
+
+    let iconDiv = document.createElement("div");
+    iconDiv.classList.add("icon-container");
+    let icon = document.createElement("img");
+    icon.src = getWeatherIcon(sky);
+    iconDiv.append(icon);
+
+    let tempDiv = document.createElement("div");
+    tempDiv.classList.add("temp-header");
+    let tempHeader = document.createElement("h2");
+    tempHeader.innerHTML = Math.round(temp) + "&#8451";
+    tempDiv.append(tempHeader);
+
+    dayBox.append(dayDiv, iconDiv, tempDiv);
+    forecastContainer.append(dayBox);
+}
+
+
+function getWeatherIcon(sky) {
+    const icons = {
+        Clear: "img/clear.png",
+        Clouds: "img/clouds.png",
+        Rain: "img/rain.png",
+        Snow: "img/snow.png"
+    };
+    return icons[sky];
+}
