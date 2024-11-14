@@ -56,12 +56,14 @@ window.addEventListener("load", function () {
 
 searchButton.addEventListener("click", () => {
     checkWeather(searchInput.value);
+    forecast(searchInput.value)
     searchInput.value = "";
 });
 
 searchInput.addEventListener("keydown", (event) => {
     if (event.keyCode === 13) {
         checkWeather(searchInput.value);
+        forecast(searchInput.value)
         searchInput.value = "";
     }
 });
@@ -103,6 +105,9 @@ async function forecast(city) {
         }
 
     });
+
+    let forecastContainer = document.querySelector(".forecast");
+    if (forecastContainer.children.length != 0) forecastContainer.replaceChildren();
 
     for (let day in dailyData) {
         const { temp, weather } = dailyData[day];
