@@ -25,16 +25,16 @@ async function checkWeather(city) {
         document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
         if (data.weather[0].main == "Clear") {
             weatherImage.src = "img/clear.png";
-            document.body.src = "img/clear.jpg";
+            document.body.style.backgroundImage =  'url("img/clear.jpg")';
         } else if (data.weather[0].main == "Clouds") {
             weatherImage.src = "img/clouds.png";
-            document.body.src = "img/cloudy.jpg";
+            document.body.style.backgroundImage =  'url("img/cloudy.jpg")';
         } else if (data.weather[0].main == "Rain") {
             weatherImage.src = "img/rain.png";
-            document.body.src = "img/rainy.jpg";
+            document.body.style.backgroundImage =  'url("img/rainy.jpg")';
         } else if (data.weather[0].main == "Snow") {
             weatherImage.src = "img/snow.png";
-            document.body.src = "img/snow.jpg";
+            document.body.style.backgroundImage =  'url("img/snow.jpg")';
         }
         weather.style.display = "flex";
         errorText.style.display = "none";
