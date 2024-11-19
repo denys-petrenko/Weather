@@ -49,9 +49,22 @@ window.addEventListener("load", function () {
     let date = today.getDate();
     let formattedDate = `${day} ${date} ${month}`;
     dateOutput.innerHTML = formattedDate;
-    let city = 'Kyiv';
-    checkWeather(city);
-    forecast(city);
+    
+    navigator.geolocation.getCurrentPosition(updateLocation);
+
+    function updateLocation(position) {
+        let latitude = position.coords.latitude;
+        let longitude = position.coords.longitude;
+        const geolocation = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}9&lon=${longitude}&appid=${apiKey}`;
+        cityApi(geolocation);
+    }
+
+    async function cityApi(url) {
+        const response = await fetch(url);
+        let city = await response.json();
+        checkWeather(city.name);
+        forecast(city.name);
+    }
 });
 
 searchButton.addEventListener("click", () => {
@@ -70,8 +83,8 @@ searchInput.addEventListener("keydown", (event) => {
 
 
 async function forecast(city) {
-    const response = await fetch(apiUrlForecast + city + `&appid=${apiKey}` + `&units=metric`);
-    const data = await response.json();
+    let response = await fetch(apiUrlForecast + city + `&appid=${apiKey}` + `&units=metric`);
+    let data = await response.json();
 
     let dailyData = {};
 
