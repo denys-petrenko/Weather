@@ -29,12 +29,27 @@ body {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
+.container-error {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 60%;
+    height: 50%;
+    background-color: rgba(203, 65, 43, 0.5);
+    padding: 28px 32px;
+    border-radius: 50px;
+    font-family: "Lato" sans-serif;
+    transition: 0.6s ease-out;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
 .container .error {
-    text-align: left;
     font-size: 30px;
     margin-top: 20px;
-    color: red;
+    color: #d02626;
     display: none;
+    justify-content: center;
+    font-family: "Lato" sans-serif;
 }
 
 .container .search-box {

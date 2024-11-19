@@ -1,7 +1,8 @@
 let searchInput = document.querySelector(".search-box input");
 let searchButton = document.querySelector(".search-box button");
+let container = document.querySelector(".container");
 let weatherImage = document.querySelector(".weather-icon");
-let weather = document.querySelector(".weather");
+let widget = document.querySelector(".widget");
 let errorText = document.querySelector(".error");
 let dateOutput = document.querySelector(".date");
 let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -13,8 +14,9 @@ const apiUrlForecast = `https://api.openweathermap.org/data/2.5/forecast?q=`;
 async function checkWeather(city) {
     const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
     if (response.status === 404) {
-        errorText.style.display = "block";
-        weather.style.display = "none";
+        errorText.style.display = "flex";
+        container.classList.add("container-error");
+        widget.style.display = "none";
     } else {
         const data = await response.json();
 
@@ -36,7 +38,8 @@ async function checkWeather(city) {
             weatherImage.src = "img/snow.png";
             document.body.style.backgroundImage =  'url("img/snow.jpg")';
         }
-        weather.style.display = "flex";
+        widget.style.display = "flex";
+        container.classList.remove("container-error");
         errorText.style.display = "none";
     }
 }
